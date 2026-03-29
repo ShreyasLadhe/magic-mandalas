@@ -1,26 +1,76 @@
 @import "tailwindcss";
 
+/*
+  Palette inspired by the DM2Buy storefront shell (navy / cream / warm accent).
+  Typography: DM Sans + Fraunces (see layout.tsx).
+*/
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --max-width: 30rem;
+  --side-bg-color: #e3dbd2;
+  --font-background: #1c3142;
+  --app-gray: #d5d8d6;
+  --background: #f7f5f1;
+  --foreground: #1c3142;
+  --card: #ffffff;
+  --card-foreground: #1c3142;
+  --primary: #1c3142;
+  --primary-foreground: #f7f5f1;
+  --secondary: #325774;
+  --muted: #4a5369;
+  --muted-foreground: #4a5369;
+  --accent: #c33f31;
+  --accent-foreground: #fff7f5;
+  --border: #d5d8d6;
+  --destructive: #9c4543;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --font-sans: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+}
+
+/*
+  Content width: comfortable column on small screens; from lg up, use full
+  viewport width — horizontal padding lives on sections (px-4 / lg:px-8).
+*/
+.max-w-app {
+  width: 100%;
+  max-width: min(100%, var(--max-width));
+}
+
+@media (min-width: 640px) {
+  .max-w-app {
+    max-width: min(100%, 40rem);
+  }
+}
+
+@media (min-width: 768px) {
+  .max-w-app {
+    max-width: min(100%, 48rem);
+  }
+}
+
+@media (min-width: 1024px) {
+  .max-w-app {
+    max-width: 100%;
+  }
 }
