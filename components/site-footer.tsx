@@ -21,12 +21,6 @@ export function SiteFooter() {
         <div>
           <p className="text-sm font-semibold text-foreground">Follow us on</p>
           <ul className="mt-3 space-y-2 text-sm text-muted">
-            
-            {/* Location */}
-            <li className="flex gap-2">
-              <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
-              <span>Bhubaneswar, Odisha, India</span>
-            </li>
 
             {/* YouTube */}
             <li className="flex gap-2 items-center">
@@ -52,6 +46,12 @@ export function SiteFooter() {
               >
                 @magic_mandalas_art
               </a>
+            </li>
+
+            {/* Location */}
+            <li className="flex gap-2">
+              <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
+              <span>Bhubaneswar, Odisha, India</span>
             </li>
 
           </ul>

@@ -135,7 +135,7 @@ export function CartDrawer() {
               <div className="mb-4 flex items-start gap-2 rounded-xl bg-[#f5ede5] px-3 py-2.5">
                 <Sparkles size={13} className="mt-0.5 shrink-0 text-[#b05c34]" />
                 <p className="text-[11px] leading-relaxed text-[#8a4520]">
-                  Each piece is handcrafted to order. Dispatch in 3–5 working days.
+                  Each piece is handcrafted to order. Dispatch in 3 to 5 working days.
                 </p>
               </div>
               <div className="flex items-center justify-between">

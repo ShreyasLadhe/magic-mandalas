@@ -57,7 +57,7 @@ export default function AboutPage() {
             <div className="border-l-2 border-accent/20 pl-4">
               <p className="text-sm leading-relaxed text-muted sm:text-[0.95rem] lg:text-base">
                 Every creation is made in small batches, focusing on detail, texture, and the
-                soothing presence these pieces bring into a home — from intricate mandalas to
+                soothing presence these pieces bring into a home, from intricate mandalas to
                 minimal wall décor, each design feels{" "}
                 <span className="font-medium text-primary">personal, warm, and timeless.</span>
               </p>
@@ -70,7 +70,7 @@ export default function AboutPage() {
             <p className="text-xs font-semibold uppercase tracking-widest text-accent mb-1">Community</p>
             <p className="text-sm leading-relaxed text-muted lg:text-[0.95rem]">
               Through YouTube and Instagram, Magic Mandalas shares not just finished pieces,
-              but the creative journey behind them — building a community around{" "}
+              but the creative journey behind them, building a community around{" "}
               <span className="font-medium text-primary">slow, meaningful craftsmanship.</span>
             </p>
             <div className="mt-3 flex gap-3">

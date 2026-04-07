@@ -9,7 +9,7 @@ import { ProductCard } from "@/components/product-card";
 import { products } from "@/data/products";
 
 const heroImage = "/images/hero-mandala.png";
-const PHONE = "+91 98765 43210"; // ← replace with your real number
+const PHONE = "+91 7683834319";
 
 function CopyPhone() {
   const [copied, setCopied] = useState(false);
@@ -93,7 +93,7 @@ export default function HomePage() {
                 </svg>
               </div>
               <p className="max-w-md text-sm leading-relaxed text-muted sm:text-base lg:text-[1.05rem]">
-                Handcrafted mandalas, wall hangings, and mindful décor —
+                Handcrafted mandalas, wall hangings, and mindful décor,
                 designed to bring{" "}
                 <span className="font-medium text-primary">balance, warmth, and quiet beauty</span>{" "}
                 into your everyday spaces.

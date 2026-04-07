@@ -6,83 +6,96 @@ export type Product = {
   description: string;
   price: number;
   category: string;
+  /** Local path under /public e.g. "/images/products/foo.jpeg"
+   *  Leave undefined to fall back to the Lorem Picsum seed (for placeholders). */
+  imageUrl?: string;
   imageSeed: string;
 };
 
 export const categories = [
   "All",
-  "Macramé",
-  "Wall art",
-  "Plant hangers",
-  "Accessories",
+  "Lippan art",
+  "Mandala art",
+  "Handmade jewellery",
+  "Flower Bouquets",
 ] as const;
 
 export const products: Product[] = [
+
+  /* ─── LIPPAN ART ─── */
   {
     id: "p1",
-    slug: "sunrise-wall-hanging",
-    name: "Sunrise wall hanging",
-    shortDescription: "Layered cotton cord with wooden dowel.",
+    slug: "jagannath-mukha-lippan-10inch",
+    name: "Jagannath Mukha — 10 inch",
+    shortDescription: "Sacred Lippan wall plate hand-sculpted in clay.",
     description:
-      "Hand-knotted sunrise motif on soft ivory cord. Includes a light oak dowel and cotton hanging cord. Size shown: 45 × 55 cm (placeholder).",
-    price: 1899,
-    category: "Wall art",
-    imageSeed: "knots-sunrise",
-  },
-  {
-    id: "p2",
-    slug: "terra-planter-set",
-    name: "Terra planter set (2)",
-    shortDescription: "Matching pair for medium pots.",
-    description:
-      "A pair of square-knot hangers with brass rings. Fits pots roughly 15–20 cm wide (placeholder sizing).",
-    price: 1299,
-    category: "Plant hangers",
-    imageSeed: "knots-terra",
-  },
-  {
-    id: "p3",
-    slug: "luna-key-fob",
-    name: "Luna key fob",
-    shortDescription: "Mini charm with waxed cord.",
-    description:
-      "Compact half-moon pattern with a sturdy clasp. Great as a gift add-on (placeholder).",
-    price: 349,
-    category: "Accessories",
-    imageSeed: "knots-luna",
+      "Crafted using the traditional Lippan art technique, this 10-inch wall plate captures the divine face of Lord Jagannath with intricate clay relief work, mirror inlay, and vivid hand-painted colour. Each piece is one-of-a-kind and carries the meditative energy of the craft. Looks stunning on a pooja room wall, entryway, or living room feature wall. Diameter: ~25 cm.",
+    price: 550,
+    category: "Lippan art",
+    imageUrl: "/images/products/550_10inch.jpeg",
+    imageSeed: "mm-jagannath-10",
   },
   {
     id: "p4",
-    slug: "drift-coasters",
-    name: "Drift coasters (set of 4)",
-    shortDescription: "Flat knots with cork backing.",
+    slug: "jagannath-sudarshana-lippan-8inch",
+    name: "Jagannath Sudarshana — 8 inch",
+    shortDescription: "Lotus-petal Lippan plate in bold red & gold.",
     description:
-      "Four coasters in a muted sand palette. Wipe clean; cork base (placeholder materials).",
-    price: 799,
-    category: "Accessories",
-    imageSeed: "knots-drift",
+      "Inspired by the Sudarshana Chakra, this 8-inch Lippan art plate features Lord Jagannath at the centre of a twelve-petal lotus rendered in clay relief. Finished with hand-dotted gold accents, pearl bead detail, and a white enamel border. The warm red and gold palette makes it an ideal devotional piece or a statement gift. Diameter: ~20 cm.",
+    price: 450,
+    category: "Lippan art",
+    imageUrl: "/images/products/450_8in_art.jpeg",
+    imageSeed: "mm-jagannath-8",
   },
   {
     id: "p5",
-    slug: "aurora-panel",
-    name: "Aurora panel",
-    shortDescription: "Vertical fringe with gradient dip.",
+    slug: "jagannath-surya-mandala-lippan-6inch",
+    name: "Jagannath Surya Mandala — 6 inch",
+    shortDescription: "Compact sun mandala in vivid yellow & crimson.",
     description:
-      "Statement panel with long fringe. Colour placement varies slightly piece to piece (placeholder).",
-    price: 2499,
-    category: "Macramé",
-    imageSeed: "knots-aurora",
+      "A bold, vibrant 6-inch Lippan plate where Lord Jagannath's divine face sits within a radiant sun mandala of deep yellow, crimson, and black. Every petal is shaped by hand and the detailing is done with fine clay — no two pieces are identical. Perfect for gifting, as a puja shelf centrepiece, or layered in a wall gallery. Diameter: ~15 cm.",
+    price: 250,
+    category: "Lippan art",
+    imageUrl: "/images/products/250_6in_art.jpeg",
+    imageSeed: "mm-jagannath-6",
   },
   {
     id: "p6",
-    slug: "harbor-basket",
-    name: "Harbor basket",
-    shortDescription: "Soft storage with rope handles.",
+    slug: "jagannath-tritaya-framed-wall-art",
+    name: "Jagannath Tritaya — Framed Wall Art",
+    shortDescription: "The holy trio on a saffron-gold framed panel.",
     description:
-      "Square-bottom basket with twisted handles. Ideal for throws or craft supplies (placeholder).",
-    price: 1599,
-    category: "Macramé",
-    imageSeed: "knots-harbor",
+      "Tritaya means 'the three' — and this framed Lippan wall panel brings together the divine trio of Jagannath, Balabhadra, and Subhadra on a rich saffron background, set in a dark wooden frame. Each face is built up in layered clay relief with fine dot work, gold coin motifs, and floral detailing borrowed from the Puri Rath Yatra tradition. A rare collector piece as much as a devotional artwork. Frame size: approx. 30 × 15 cm.",
+    price: 650,
+    category: "Lippan art",
+    imageUrl: "/images/products/650_wall_art.jpeg",
+    imageSeed: "mm-jagannath-trio",
+  },
+
+  /* ─── MANDALA ART / WALL HANGINGS ─── */
+  {
+    id: "p2",
+    slug: "shubh-labh-peacock-pair",
+    name: "Shubh Labh Peacock Pair",
+    shortDescription: "Hand-painted peacock duo with lotus drops.",
+    description:
+      "A beautifully matched pair of wall hangings depicting two peacocks facing each other — a timeless symbol of prosperity and grace. Each panel carries Shubh and Labh script in gold, suspended below the peacock with a hand-crafted lotus charm. Finished with pearl-bead accents and a mirror centrepiece. Ideal for doorways, pooja rooms, or as a festive gift. Set of 2.",
+    price: 450,
+    category: "Mandala art",
+    imageUrl: "/images/products/wall_450_1.jpeg",
+    imageSeed: "mm-peacock-pair",
+  },
+  {
+    id: "p3",
+    slug: "shubh-labh-lotus-mandala-pair",
+    name: "Shubh Labh Lotus Mandala Pair",
+    shortDescription: "Paired mandala motifs with Shubh Labh drops.",
+    description:
+      "This pair of wall hangings blends the lotus mandala form with peacock motifs in an orange, navy, and green palette. The Shubh and Labh calligraphy pendants are set in bold enamel against layered floral backgrounds, finishing with an oval mirror charm. Crafted for home entryways, Diwali décor, or gifting. Set of 2.",
+    price: 450,
+    category: "Mandala art",
+    imageUrl: "/images/products/wall_450_2.jpeg",
+    imageSeed: "mm-lotus-pair",
   },
 ];
 

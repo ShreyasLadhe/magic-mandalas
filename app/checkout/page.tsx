@@ -1,61 +1,32 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import {
   ArrowLeft, Sparkles, MapPin, User, Phone,
-  ShoppingBag, CheckCircle2, MessageCircle, Package, Send, ChevronDown,
+  ShoppingBag, CheckCircle2, MessageCircle, Package, Send,
+  ChevronDown, Search, Check,
 } from "lucide-react";
 
 import { formatInr } from "@/lib/format";
 import { productImageUrl } from "@/lib/images";
 import { cartLineTotal, cartTotal, useCartStore } from "@/store/cart-store";
 
-/* ── Replace with seller's WhatsApp number (digits only, with country code) ── */
-const SELLER_WA = "919876543210";
+const SELLER_WA = "917683834319";
 
-/* ── All Indian States + UTs ── */
 const INDIAN_STATES = [
-  "Andaman and Nicobar Islands",
-  "Andhra Pradesh",
-  "Arunachal Pradesh",
-  "Assam",
-  "Bihar",
-  "Chandigarh",
-  "Chhattisgarh",
-  "Dadra and Nagar Haveli and Daman and Diu",
-  "Delhi",
-  "Goa",
-  "Gujarat",
-  "Haryana",
-  "Himachal Pradesh",
-  "Jammu and Kashmir",
-  "Jharkhand",
-  "Karnataka",
-  "Kerala",
-  "Ladakh",
-  "Lakshadweep",
-  "Madhya Pradesh",
-  "Maharashtra",
-  "Manipur",
-  "Meghalaya",
-  "Mizoram",
-  "Nagaland",
-  "Odisha",
-  "Puducherry",
-  "Punjab",
-  "Rajasthan",
-  "Sikkim",
-  "Tamil Nadu",
-  "Telangana",
-  "Tripura",
-  "Uttar Pradesh",
-  "Uttarakhand",
+  "Andaman and Nicobar Islands", "Andhra Pradesh", "Arunachal Pradesh",
+  "Assam", "Bihar", "Chandigarh", "Chhattisgarh",
+  "Dadra and Nagar Haveli and Daman and Diu", "Delhi", "Goa", "Gujarat",
+  "Haryana", "Himachal Pradesh", "Jammu and Kashmir", "Jharkhand",
+  "Karnataka", "Kerala", "Ladakh", "Lakshadweep", "Madhya Pradesh",
+  "Maharashtra", "Manipur", "Meghalaya", "Mizoram", "Nagaland",
+  "Odisha", "Puducherry", "Punjab", "Rajasthan", "Sikkim",
+  "Tamil Nadu", "Telangana", "Tripura", "Uttar Pradesh", "Uttarakhand",
   "West Bengal",
 ];
 
-/* ── How it works ── */
 const HOW_IT_WORKS = [
   { icon: <ShoppingBag size={16} strokeWidth={2} />, label: "Fill your details", desc: "Name, phone & delivery address." },
   { icon: <Send size={16} strokeWidth={2} />, label: "Send via WhatsApp", desc: "Your order opens in WhatsApp, pre-filled and ready." },
@@ -63,20 +34,157 @@ const HOW_IT_WORKS = [
   { icon: <Package size={16} strokeWidth={2} />, label: "Packed & dispatched", desc: "Handcrafted and shipped within 3-5 working days." },
 ];
 
+/* ─────────────────────────────────────────────
+   Custom State Picker
+───────────────────────────────────────────── */
+function StatePicker({
+  value, onChange, error,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  error?: string;
+}) {
+  const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState("");
+  const containerRef = useRef<HTMLDivElement>(null);
+  const searchRef = useRef<HTMLInputElement>(null);
+
+  const filtered = INDIAN_STATES.filter((s) =>
+    s.toLowerCase().includes(query.toLowerCase())
+  );
+
+  // Close on outside click
+  useEffect(() => {
+    function handle(e: MouseEvent) {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setOpen(false);
+        setQuery("");
+      }
+    }
+    document.addEventListener("mousedown", handle);
+    return () => document.removeEventListener("mousedown", handle);
+  }, []);
+
+  // Close on Escape
+  useEffect(() => {
+    function handle(e: KeyboardEvent) {
+      if (e.key === "Escape") { setOpen(false); setQuery(""); }
+    }
+    document.addEventListener("keydown", handle);
+    return () => document.removeEventListener("keydown", handle);
+  }, []);
+
+  // Focus search when opened
+  useEffect(() => {
+    if (open) setTimeout(() => searchRef.current?.focus(), 50);
+  }, [open]);
+
+  return (
+    <div ref={containerRef} className="relative">
+      {/* Trigger */}
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        className={[
+          "flex w-full items-center justify-between rounded-xl border px-3.5 py-2.5 text-sm outline-none transition",
+          "focus:ring-2 focus:ring-[#b05c34]/10",
+          open
+            ? "border-[#b05c34]/60 bg-white ring-2 ring-[#b05c34]/10"
+            : error
+            ? "border-red-300 bg-red-50/30"
+            : "border-[#e8e0d5] bg-[#faf8f5]",
+          value ? "text-primary" : "text-muted/60",
+        ].join(" ")}
+      >
+        <span className="truncate">{value || "Select state / UT"}</span>
+        <ChevronDown
+          size={14}
+          strokeWidth={2}
+          className={`shrink-0 text-muted transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+        />
+      </button>
+
+      {/* Dropdown panel */}
+      {open && (
+        <div className="absolute left-0 right-0 top-[calc(100%+6px)] z-50 overflow-hidden rounded-2xl border border-[#e8e0d5] bg-white shadow-[0_8px_30px_rgba(0,0,0,0.10)]">
+          {/* Header */}
+          <div className="border-b border-[#f0e8e0] bg-gradient-to-br from-[#eed3ca]/30 to-white px-3 py-2.5">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#b05c34]">
+              Select State / UT
+            </p>
+          </div>
+
+          {/* Search box */}
+          <div className="border-b border-[#f0e8e0] px-3 py-2">
+            <div className="flex items-center gap-2 rounded-lg border border-[#e8e0d5] bg-[#faf8f5] px-2.5 py-1.5 focus-within:border-[#b05c34]/50 focus-within:ring-1 focus-within:ring-[#b05c34]/10 transition">
+              <Search size={13} className="shrink-0 text-muted" />
+              <input
+                ref={searchRef}
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search states..."
+                className="w-full bg-transparent text-sm text-primary outline-none placeholder:text-muted/50"
+              />
+            </div>
+          </div>
+
+          {/* List */}
+          <ul className="max-h-52 overflow-y-auto py-1">
+            {filtered.length === 0 ? (
+              <li className="px-4 py-3 text-sm text-muted">No states found.</li>
+            ) : (
+              filtered.map((s) => {
+                const selected = s === value;
+                return (
+                  <li key={s}>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        onChange(s);
+                        setOpen(false);
+                        setQuery("");
+                      }}
+                      className={[
+                        "flex w-full items-center justify-between px-4 py-2 text-left text-sm transition",
+                        selected
+                          ? "bg-[#f5ede5] font-semibold text-[#8a4520]"
+                          : "text-primary hover:bg-[#faf8f5]",
+                      ].join(" ")}
+                    >
+                      <span>{s}</span>
+                      {selected && (
+                        <Check size={13} strokeWidth={2.5} className="shrink-0 text-[#b05c34]" />
+                      )}
+                    </button>
+                  </li>
+                );
+              })
+            )}
+          </ul>
+
+          {/* Footer hint */}
+          <div className="border-t border-[#f0e8e0] bg-[#faf8f5] px-3 py-2">
+            <p className="text-[10px] text-muted">
+              {filtered.length} state{filtered.length !== 1 ? "s" : ""} · India
+            </p>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   Main Page
+───────────────────────────────────────────── */
 export default function CheckoutPage() {
   const lines = useCartStore((s) => s.lines);
   const removeItem = useCartStore((s) => s.removeItem);
   const total = cartTotal(lines);
 
   const [form, setForm] = useState({
-    firstName: "",
-    lastName: "",
-    phone: "",
-    address: "",
-    city: "",
-    pincode: "",
-    state: "",
-    note: "",
+    firstName: "", lastName: "", phone: "",
+    address: "", city: "", pincode: "", state: "", note: "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [sent, setSent] = useState(false);
@@ -84,7 +192,7 @@ export default function CheckoutPage() {
   const [sentTotal, setSentTotal] = useState(0);
 
   const set = (k: keyof typeof form) =>
-    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
       setForm((f) => ({ ...f, [k]: e.target.value }));
 
   function validate() {
@@ -105,43 +213,31 @@ export default function CheckoutPage() {
     const items = lines
       .map((l) => `${l.name} x${l.quantity}  =  ${formatInr(cartLineTotal(l))}`)
       .join("\n");
-
     return [
-      "NEW ORDER - Magic Mandalas",
-      divider,
+      "NEW ORDER - Magic Mandalas", divider,
       "CUSTOMER",
       `Name: ${form.firstName} ${form.lastName}`,
-      `Phone: ${form.phone}`,
-      divider,
+      `Phone: ${form.phone}`, divider,
       "DELIVERY ADDRESS",
       form.address,
       `${form.city} - ${form.pincode}`,
-      form.state,
-      divider,
-      "ORDER ITEMS",
-      items,
-      divider,
+      form.state, divider,
+      "ORDER ITEMS", items, divider,
       `TOTAL: ${formatInr(total)}`,
       ...(form.note ? [divider, `NOTE: ${form.note}`] : []),
-      divider,
-      "Placed via Magic Mandalas website",
+      divider, "Placed via Magic Mandalas website",
     ].join("\n");
   }
 
   function handlePlaceOrder() {
     if (!validate()) return;
-    // Snapshot before clearing
     setSentLines([...lines]);
     setSentTotal(total);
-    // Open WhatsApp
-    const url = `https://wa.me/${SELLER_WA}?text=${encodeURIComponent(buildMessage())}`;
-    window.open(url, "_blank");
-    // Clear cart
+    window.open(`https://wa.me/${SELLER_WA}?text=${encodeURIComponent(buildMessage())}`, "_blank");
     lines.forEach((l) => removeItem(l.productId));
     setSent(true);
   }
 
-  /* ── Empty cart guard ── */
   if (lines.length === 0 && !sent) {
     return (
       <div className="flex min-h-[60vh] flex-col items-center justify-center gap-5 px-4 text-center">
@@ -159,12 +255,10 @@ export default function CheckoutPage() {
     );
   }
 
-  /* ── Success screen ── */
   if (sent) {
     return (
       <div className="mx-auto w-full max-w-app px-4 py-12 sm:px-6 lg:px-8">
         <div className="flex flex-col items-center gap-8 text-center">
-          {/* Mandala rings */}
           <div className="relative flex h-28 w-28 items-center justify-center">
             <div className="absolute h-28 w-28 rounded-full border border-[#d4a898]/25" />
             <div className="absolute h-20 w-20 rounded-full border border-[#d4a898]/35" />
@@ -173,16 +267,10 @@ export default function CheckoutPage() {
               <CheckCircle2 size={20} strokeWidth={1.8} className="text-[#b05c34]" />
             </div>
           </div>
-
           <div>
             <p className="font-display text-3xl font-semibold text-primary">Order sent!</p>
-            <p className="mt-2 text-sm text-muted">
-              Your order has opened in WhatsApp — just hit Send.<br />
-              We'll confirm once we receive your message.
-            </p>
+            <p className="mt-2 text-sm text-muted">Your order has opened in WhatsApp — just hit Send.<br />We'll confirm once we receive your message.</p>
           </div>
-
-          {/* Order recap */}
           <div className="w-full max-w-sm overflow-hidden rounded-2xl border border-[#e8e0d5] bg-[#faf8f5] text-left">
             <div className="border-b border-[#e8e0d5] bg-gradient-to-br from-[#eed3ca]/40 via-[#faf8f5] to-[#faf8f5] px-5 py-3">
               <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#b05c34]">Your order</p>
@@ -200,14 +288,9 @@ export default function CheckoutPage() {
               <span className="font-display text-base font-semibold tabular-nums text-primary">{formatInr(sentTotal)}</span>
             </div>
           </div>
-
           <div className="flex gap-3">
-            <Link href="/" className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-5 py-2.5 text-sm font-semibold text-primary transition hover:bg-muted/60">
-              Back to home
-            </Link>
-            <Link href="/shop" className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition hover:opacity-90">
-              Keep shopping
-            </Link>
+            <Link href="/" className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-5 py-2.5 text-sm font-semibold text-primary transition hover:bg-muted/60">Back to home</Link>
+            <Link href="/shop" className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition hover:opacity-90">Keep shopping</Link>
           </div>
         </div>
       </div>
@@ -216,8 +299,6 @@ export default function CheckoutPage() {
 
   return (
     <div className="mx-auto w-full max-w-app px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-14">
-
-      {/* ── Page header ── */}
       <div className="mb-8">
         <Link href="/" className="mb-4 inline-flex items-center gap-1.5 text-xs font-medium text-muted transition hover:text-primary">
           <ArrowLeft size={13} strokeWidth={2} /> Back to shop
@@ -230,11 +311,9 @@ export default function CheckoutPage() {
       </div>
 
       <div className="grid gap-8 lg:grid-cols-[1fr_380px] lg:items-start">
-
-        {/* ══ LEFT COLUMN ══ */}
         <div className="flex flex-col gap-6">
 
-          {/* ── How it works ── */}
+          {/* How it works */}
           <div className="relative overflow-hidden rounded-2xl border border-[#e8e0d5] bg-gradient-to-br from-[#eed3ca]/40 via-[#faf8f5] to-[#faf8f5] p-5">
             <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full border border-[#d4a898]/25" />
             <div className="pointer-events-none absolute -right-4 -top-4 h-16 w-16 rounded-full border border-[#d4a898]/15" />
@@ -246,12 +325,8 @@ export default function CheckoutPage() {
               {HOW_IT_WORKS.map((step, i) => (
                 <div key={step.label} className="flex flex-col gap-2">
                   <div className="flex items-center gap-2">
-                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#b05c34]/10 text-[#b05c34]">
-                      {step.icon}
-                    </div>
-                    {i < HOW_IT_WORKS.length - 1 && (
-                      <div className="hidden h-px flex-1 bg-[#e8e0d5] sm:block" />
-                    )}
+                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#b05c34]/10 text-[#b05c34]">{step.icon}</div>
+                    {i < HOW_IT_WORKS.length - 1 && <div className="hidden h-px flex-1 bg-[#e8e0d5] sm:block" />}
                   </div>
                   <p className="text-xs font-semibold text-primary">{step.label}</p>
                   <p className="text-[11px] leading-relaxed text-muted">{step.desc}</p>
@@ -263,7 +338,7 @@ export default function CheckoutPage() {
             </p>
           </div>
 
-          {/* ── Details form ── */}
+          {/* Form */}
           <div className="rounded-2xl border border-[#e8e0d5] bg-white p-5 sm:p-6">
             <div className="mb-5 flex items-center gap-2">
               <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[#f5ede5]">
@@ -273,7 +348,6 @@ export default function CheckoutPage() {
             </div>
 
             <div className="grid gap-4">
-              {/* Name */}
               <div className="grid grid-cols-2 gap-3">
                 <Field label="First name" error={errors.firstName}>
                   <input value={form.firstName} onChange={set("firstName")} placeholder="Priya" className={inputCls(errors.firstName)} />
@@ -283,7 +357,6 @@ export default function CheckoutPage() {
                 </Field>
               </div>
 
-              {/* Phone */}
               <Field label="WhatsApp / phone number" error={errors.phone}>
                 <div className="relative">
                   <Phone size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
@@ -291,7 +364,6 @@ export default function CheckoutPage() {
                 </div>
               </Field>
 
-              {/* Address */}
               <Field label="Street address" error={errors.address}>
                 <div className="relative">
                   <MapPin size={14} className="absolute left-3 top-3.5 text-muted" />
@@ -299,7 +371,6 @@ export default function CheckoutPage() {
                 </div>
               </Field>
 
-              {/* City + Pincode */}
               <div className="grid grid-cols-2 gap-3">
                 <Field label="City" error={errors.city}>
                   <input value={form.city} onChange={set("city")} placeholder="Bhubaneswar" className={inputCls(errors.city)} />
@@ -309,24 +380,18 @@ export default function CheckoutPage() {
                 </Field>
               </div>
 
-              {/* State dropdown — full width, mandatory */}
+              {/* Custom state picker */}
               <Field label="State" error={errors.state}>
-                <div className="relative">
-                  <select
-                    value={form.state}
-                    onChange={set("state")}
-                    className={`${inputCls(errors.state)} appearance-none pr-9 ${!form.state ? "text-muted/60" : "text-primary"}`}
-                  >
-                    <option value="" disabled>Select state / UT</option>
-                    {INDIAN_STATES.map((s) => (
-                      <option key={s} value={s}>{s}</option>
-                    ))}
-                  </select>
-                  <ChevronDown size={14} className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-muted" />
-                </div>
+                <StatePicker
+                  value={form.state}
+                  onChange={(v) => {
+                    setForm((f) => ({ ...f, state: v }));
+                    setErrors((e) => ({ ...e, state: "" }));
+                  }}
+                  error={errors.state}
+                />
               </Field>
 
-              {/* Note */}
               <Field label="Order note (optional)" error="">
                 <textarea value={form.note} onChange={set("note")} placeholder="Colour preference, gift message, special instructions..." rows={2} className={`${inputCls("")} resize-none`} />
               </Field>
@@ -334,7 +399,7 @@ export default function CheckoutPage() {
           </div>
         </div>
 
-        {/* ══ RIGHT COLUMN — sticky order summary ══ */}
+        {/* Order summary */}
         <div className="lg:sticky lg:top-24">
           <div className="overflow-hidden rounded-2xl border border-[#e8e0d5] bg-[#faf8f5]">
             <div className="relative overflow-hidden border-b border-[#e8e0d5] bg-gradient-to-br from-[#eed3ca]/50 via-[#faf8f5] to-[#faf8f5] px-5 py-4">
@@ -342,7 +407,6 @@ export default function CheckoutPage() {
               <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#b05c34]">Order summary</p>
               <p className="mt-0.5 text-[11px] text-muted">{lines.reduce((n, l) => n + l.quantity, 0)} items</p>
             </div>
-
             <ul className="flex flex-col divide-y divide-[#f0e8e0] px-4 py-2">
               {lines.map((line) => (
                 <li key={line.productId} className="flex items-center gap-3 py-3">
@@ -357,14 +421,12 @@ export default function CheckoutPage() {
                 </li>
               ))}
             </ul>
-
             <div className="border-t border-[#e8e0d5] bg-white px-5 py-4">
               <div className="flex items-center justify-between">
                 <span className="text-sm text-muted">Subtotal</span>
                 <span className="font-display text-2xl font-semibold tabular-nums text-primary">{formatInr(total)}</span>
               </div>
               <p className="mt-0.5 text-[11px] text-muted">Shipping discussed over WhatsApp.</p>
-
               <button
                 type="button"
                 onClick={handlePlaceOrder}
@@ -376,20 +438,17 @@ export default function CheckoutPage() {
                 </svg>
                 Place order via WhatsApp
               </button>
-
               <p className="mt-3 text-center text-[11px] leading-relaxed text-muted">
                 Opens WhatsApp with your order pre-filled. No payment until we confirm.
               </p>
             </div>
           </div>
         </div>
-
       </div>
     </div>
   );
 }
 
-/* ── Helpers ── */
 function inputCls(error?: string) {
   return [
     "w-full rounded-xl border bg-[#faf8f5] px-3.5 py-2.5 text-sm text-primary outline-none transition placeholder:text-muted/60",

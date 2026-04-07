@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { AddToCart } from "@/components/add-to-cart";
 import { getProductBySlug, products } from "@/data/products";
 import { formatInr } from "@/lib/format";
-import { productImageUrl } from "@/lib/images";
+import { getProductImage } from "@/lib/images";
 import type { Metadata } from "next";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -28,7 +28,7 @@ export default async function ProductPage({ params }: Props) {
   const product = getProductBySlug(slug);
   if (!product) notFound();
 
-  const src = productImageUrl(product.imageSeed, 900, 1100);
+  const src = getProductImage(product, 900, 1100);
 
   return (
     <div className="mx-auto w-full max-w-app px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
@@ -63,8 +63,9 @@ export default async function ProductPage({ params }: Props) {
           </div>
 
           <ul className="mt-10 space-y-2 border-t border-border pt-6 text-sm text-muted">
-            <li>• Placeholder product — replace with CMS or DB fields.</li>
-            <li>• Images from Lorem Picsum (seeded) for demo use.</li>
+            <li>• Handcrafted to order — each piece is unique.</li>
+            <li>• Dispatched within 3–5 working days.</li>
+            <li>• Custom sizes available — DM us on Instagram.</li>
           </ul>
         </div>
       </div>
