@@ -6,7 +6,8 @@ import { Drawer } from "vaul";
 import { Minus, Plus, Trash2, ShoppingBag, Sparkles, ArrowRight } from "lucide-react";
 
 import { formatInr } from "@/lib/format";
-import { productImageUrl } from "@/lib/images";
+import { getProductImage } from "@/lib/images";
+import { products } from "@/data/products";
 import { cartLineTotal, cartTotal, useCartStore } from "@/store/cart-store";
 
 export function CartDrawer() {
@@ -88,7 +89,10 @@ export function CartDrawer() {
                     <div className="flex gap-3 pl-2">
                       <div className="relative h-[72px] w-[72px] shrink-0 overflow-hidden rounded-xl bg-[#f5ede5]">
                         <Image
-                          src={productImageUrl(line.imageSeed, 200, 200)}
+                          src={getProductImage(
+                            products.find((p) => p.id === line.productId) ?? { imageUrl: undefined, imageSeed: line.imageSeed },
+                            200, 200
+                          )}
                           alt=""
                           fill
                           className="object-cover"

@@ -10,7 +10,8 @@ import {
 } from "lucide-react";
 
 import { formatInr } from "@/lib/format";
-import { productImageUrl } from "@/lib/images";
+import { getProductImage } from "@/lib/images";
+import { products } from "@/data/products";
 import { cartLineTotal, cartTotal, useCartStore } from "@/store/cart-store";
 
 const SELLER_WA = "917683834319";
@@ -411,7 +412,10 @@ export default function CheckoutPage() {
               {lines.map((line) => (
                 <li key={line.productId} className="flex items-center gap-3 py-3">
                   <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-[#f5ede5]">
-                    <Image src={productImageUrl(line.imageSeed, 120, 120)} alt="" fill className="object-cover" sizes="48px" />
+                    <Image src={getProductImage(
+                      products.find((p) => p.id === line.productId) ?? { imageUrl: undefined, imageSeed: line.imageSeed },
+                      120, 120
+                    )} alt="" fill className="object-cover" sizes="48px" />
                   </div>
                   <div className="min-w-0 flex-1">
                     <p className="line-clamp-1 text-xs font-semibold text-primary">{line.name}</p>
